@@ -3,6 +3,7 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios = require('axios');
 
 
 public_users.post("/register", (req,res) => {
@@ -82,13 +83,52 @@ module.exports.general = public_users;
 
 // Tasks 1-4 done using promise callbacks
 // task 10: get all books from the shop
+const getBooks = () => {
+    axios.get('http://localhost:5000/')
+      .then(response => {
+        console.log("Books list:", JSON.stringify(response.data, null, 4));
+      })
+      .catch(error => {
+        console.log("Error:", error.message);
+      });
+  }
+  
+  // task 11: retrieve book using ISBN
+  const getBookByISBN = (isbn) => {
+    axios.get(`http://localhost:5000/isbn/${isbn}`)
+      .then(response => {
+        console.log("Book by ISBN:", response.data);
+      })
+      .catch(error => {
+        console.log("Error:", error.message);
+      });
+  }
+  
+  // task 12: retrieve by author
+  const getBookByAuthor = (author) => {
+    axios.get(`http://localhost:5000/author/${author}`)
+      .then(response => {
+        console.log("Books by Author:", response.data);
+      })
+      .catch(error => {
+        console.log("Error:", error.message);
+      });
+  }
+  
+  // task 13: retrieve by title
+  const getBookByTitle = (title) => {
+    axios.get(`http://localhost:5000/title/${title}`)
+      .then(response => {
+        console.log("Books by Title:", response.data);
+      })
+      .catch(error => {
+        console.log("Error:", error.message);
+      });
+  }
 
-const axios = require('axios');
-
-axios.get('http://localhost:5000/')
-  .then(response => {
-    console.log(JSON.stringify(response.data, null, 4));
-  })
-  .catch(error => {
-    console.log(error.message);
-  });
+  module.exports = {
+    getBooks,
+    getBookByISBN,
+    getBookByAuthor,
+    getBookByTitle
+  };
