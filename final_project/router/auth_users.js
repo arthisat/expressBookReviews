@@ -21,7 +21,7 @@ regd_users.post("/login", (req,res) => {
     const {username, password} = req.body;
 
     if (!username || !password) {
-        res.status(400).send({message: "Username and password required"});
+        return res.status(400).send({message: "Username and password required"});
     }
 
     if (authenticatedUser(username, password)) {
@@ -45,7 +45,7 @@ regd_users.post("/login", (req,res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
     const isbn = req.params.isbn;
-    const review = req.body.review;
+    const review = req.query.review;
     const username = req.session.authorization.username;
 
     if (!books[isbn]) {
@@ -56,6 +56,23 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 
     return res.status(200).json({message: "Review added/updated successfully" });
 });
+
+// delete a book review
+regd_users.delete("/auth/review/:isbn",(req, res) => {
+    const isbn = req.params.isbn;
+    const username = req.session.authorization.username;
+
+    if (!books[isbn]) {
+        return res.status(404).json({message: "Book not found" });
+    }
+
+    if (!books[isbn].reviews[username]) {
+        return res.status(404).json({message: "No review found for this user" });
+    }
+
+    delete books[isbn].reviews[username];
+    return res.status(200).json({message: "Review deleted successfully" });
+})
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
