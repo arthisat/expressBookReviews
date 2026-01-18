@@ -79,3 +79,16 @@ public_users.get('/review/:isbn',function (req, res) {
 });
 
 module.exports.general = public_users;
+
+// Tasks 1-4 done using promise callbacks
+// task 10: get all books from the shop
+
+const axios = require('axios');
+
+axios.get('http://localhost:5000/')
+  .then(response => {
+    console.log(JSON.stringify(response.data, null, 4));
+  })
+  .catch(error => {
+    console.log(error.message);
+  });
